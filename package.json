@@ -1,0 +1,29 @@
+{
+  "name": "samon-powershell",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "firebase": "^13.1.0",
+    "firebase-admin": "^14.5.0",
+    "systeminformation": "^5.21.0"
+  },
+  "build": {
+    "appId": "com.samon.powershell",
+    "productName": "Samon PowerShell",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "samon2.ico"
+    }
+  }
+}

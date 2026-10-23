@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Samon PowerShell</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Consolas', 'Courier New', Courier, monospace;
+    }
+    body {
+      background-color: #010101;
+      color: #cccccc;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #titlebar {
+      height: 28px;
+      background-color: #010101;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      -webkit-app-region: drag;
+      padding-left: 12px;
+      font-size: 12px;
+      color: #aaaaaa;
+      border-bottom: 1px solid #1a1a1a;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .window-controls {
+      display: flex;
+      height: 100%;
+      -webkit-app-region: no-drag;
+    }
+    .win-btn {
+      width: 45px;
+      height: 100%;
+      background: transparent;
+      border: none;
+      color: #cccccc;
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .win-btn:hover {
+      background-color: #333333;
+      color: #ffffff;
+    }
+    .win-btn.close:hover {
+      background-color: #e81123;
+      color: #ffffff;
+    }
+
+    #terminal {
+      flex: 1;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-size: 14px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 15px 5px 15px;
+    }
+    .output-line {
+      margin-bottom: 2px;
+    }
+    .error-text {
+      color: #ff5555;
+    }
+    .success-text {
+      color: #55ff55;
+    }
+    .info-text {
+      color: #55ffff;
+    }
+    .link-text {
+      color: #3b82f6;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    
+    .input-line {
+      display: flex;
+      align-items: center;
+      padding: 5px 15px 15px 15px;
+      background-color: #010101;
+      flex-shrink: 0;
+    }
+    .prompt {
+      color: #cccccc;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    #command-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-family: 'Consolas', 'Courier New', Courier, monospace;
+      font-size: 14px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="titlebar">
+    <span>Samon PowerShell</span>
+    <div class="window-controls">
+      <button class="win-btn" onclick="window.api.minimizeWindow()">🗕</button>
+      <button class="win-btn" onclick="window.api.maximizeWindow()">🗖</button>
+      <button class="win-btn close" onclick="window.api.closeWindow()">✕</button>
+    </div>
+  </div>
+
+  <!-- ターミナル画面 -->
+  <div id="terminal">
+    <div class="output-line">Samon PowerShell</div>
+    <div class="output-line">Copyright (C) Microsoft Corporation. All rights reserved.</div>
+    <div class="output-line">&nbsp;</div>
+    <div class="output-line">新機能と改善のために 最新の PowerShell をインストールしてください ! <a class="link-text" onclick="window.api.openExternal('https://aka.ms/PSWindows')">https://aka.ms/PSWindows</a>[cite: 1]</div>
+    <div class="output-line">&nbsp;</div>
+    <div class="output-line">利用可能なコマンド一覧を確認するには <span class="info-text">help</span> または <span class="info-text">cls</span> と入力してください。</div>
+    <div class="output-line">&nbsp;</div>
+  </div>
+
+  <!-- Webビュー画面（初期は非表示） -->
+  <div id="view-container" style="display: none; flex: 1; flex-direction: column; background: #000;">
+    <div style="background: #111; padding: 5px 10px; display: flex; justify-content: space-between; align-items: center; color: #aaa; font-size: 12px;">
+      <span id="view-url-display">Web View</span>
+      <button onclick="closeWebView()" style="background: #333; color: #fff; border: none; padding: 2px 8px; cursor: pointer;">✕ 閉じる</button>
+    </div>
+    <webview id="my-webview" style="flex: 1; width: 100%; height: 100%;"></webview>
+  </div>
+
+  <div class="input-line">
+    <span class="prompt" id="prompt-label">PS C:\WINDOWS\system32&gt;</span>
+    <input type="text" id="command-input" autofocus autocomplete="off" spellcheck="false">
+  </div>
+
+  <script>
+    function closeWebView() {
+      document.getElementById('view-container').style.display = 'none';
+      document.getElementById('terminal').style.display = 'flex';
+      document.getElementById('my-webview').src = 'about:blank';
+      document.getElementById('command-input').focus();
+    }
+  </script>
+  <script src="renderer.js"></script>
+</body>
+</html>
